@@ -29,7 +29,7 @@ node{
         docker.withTool('Docker'){
             docker.withRegistry('https://registry.hub.docker.com/','dockerCred'){
             echo "Successfully logged in Docker Hub"
-            def customImage = docker.build('tirthankar17/bootcamp-case-study:2.0')
+            def customImage = docker.build('tirthankar17/bootcamp-case-study:latest')
             echo "Image built successfully"
             customImage.push()
             }
