@@ -5,7 +5,7 @@ node{
     def mavenCMD
     
     stage('Preparing environment'){
-        gitURL="https://github.com/Tirthankar17/DevOpsBootCampCaseStudy.git"
+        gitURL="https://github.com/Tirthankar17/BootCampCaseStudy.git"
         maven = tool name: 'Maven 3.8.1', type: 'maven'
         mavenCMD = "${maven}/bin/mvn"
     }
@@ -29,7 +29,7 @@ node{
         docker.withTool('Docker'){
             docker.withRegistry('https://registry.hub.docker.com/','dockerCred'){
             echo "Successfully logged in Docker Hub"
-            def customImage = docker.build('tirthankar17/bootcamp-case-study:1.0')
+            def customImage = docker.build('tirthankar17/bootcamp-case-study:2.0')
             echo "Image built successfully"
             customImage.push()
             }
