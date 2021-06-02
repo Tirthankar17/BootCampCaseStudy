@@ -27,6 +27,9 @@ node{
         sh "${mavenCMD} clean test package"
         
     }
+    stage('Publish HTML Report'){
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+    }
     stage('Building docker Image'){
         docker.withTool('Docker'){
             docker.withRegistry('https://registry.hub.docker.com/','dockerCred'){
