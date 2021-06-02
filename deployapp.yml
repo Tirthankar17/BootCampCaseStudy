@@ -34,7 +34,7 @@
     - name: Run Docker container
       docker_container:
         name: appserver
-        image: tirthankar17/bootcamp-case-study:2.0
+        image: tirthankar17/bootcamp-case-study:latest
         published_ports: 8888:8888
         state: started
         restart: yes
