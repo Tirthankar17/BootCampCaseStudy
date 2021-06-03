@@ -20,7 +20,7 @@ node{
         }
     }
     stage('AppScan Test'){
-        appscan application: 'd057c057-af65-4fd0-a802-04e075efd31a', credentials: 'AppScanCred', name: 'd057c057-af65-4fd0-a802-04e075efd31a332', scanner: static_analyzer(hasOptions: false, target: 'AppScanTest'), type: 'Static Analyzer'
+        appscan application: 'd057c057-af65-4fd0-a802-04e075efd31a', credentials: 'AppScanCred', name: 'AppScanTest', scanner: static_analyzer(hasOptions: false, target: "${WORKSPACE}"), type: 'Static Analyzer'
     }
     stage('Build and Package'){
         echo "Building the code"
