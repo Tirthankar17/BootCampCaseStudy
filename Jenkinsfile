@@ -19,9 +19,11 @@ node{
             sh "${mavenCMD} clean package sonar:sonar"
         }
     }
-    stage('Wait for quality gate'){
+    stage('Wait for Sonar Check Quality Gate'){
         for (int i=0; i < 200; i++){
-            echo "Hey"
+            timeout(time: 10, unit: 'SECONDS') {
+                waitForQualityGate()
+            }
         }
     }
     stage('AppScan Test'){
@@ -33,7 +35,7 @@ node{
         
     }
     stage('Publish HTML Report'){
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: '', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${WORKSPACE}", reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
     }
     stage('Building docker Image'){
         docker.withTool('Docker'){
@@ -50,6 +52,7 @@ node{
         echo "App deployed successfully on hosts"
         //sending mail after successful deployment
         mail body: "Code build ${BUILD_NUMBER} has completed successfully and deployed to host.", subject: "Build Report ${BUILD_NUMBER}" , to: 'guptatirthankar@gmail.com'
+        currentBuild.result="SUCCESS"
     }
     stage('Clean up'){
             echo "Cleaning up the Workspace"
@@ -65,8 +68,10 @@ catch(Exception err){
     mail body: "Build has failed with ${err}", subject: 'Build Report', to: 'guptatirthankar@gmail.com'
 }
 finally {
-    (currentBuild.result!= "ABORTED") && node("master") && (currentBuild.result!= "FAILURE"){
-        echo "Code build number ${BUILD_NUMBER} has completed successfully."
+    (currentBuild.result=="FAILURE") {
+        echo "Code build number ${BUILD_NUMBER} has failed."
     }
-    
+    (currentBuild.result!= "ABORTED") && node("master"){
+        echo "Code build number ${BUILD_NUMBER} has completed successfully."
+    }  
 }
