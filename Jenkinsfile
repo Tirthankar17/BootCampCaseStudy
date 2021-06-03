@@ -20,7 +20,7 @@ node{
         }
     }
     stage('AppScan Test'){
-        appscan application: '2f0476f4-f66c-464f-be87-25759eb32216', credentials: 'AppScanCred', name: 'AppScanTest', scanner: static_analyzer(hasOptions: false, target: "${WORKSPACE}/target/*jar"), type: 'Static Analyzer'
+        appscan application: '2f0476f4-f66c-464f-be87-25759eb32216', credentials: 'AppScanCred', name: 'AppScanTest', scanner: static_analyzer(hasOptions: false, target: "${WORKSPACE}"), type: 'Static Analyzer'
     }
     stage('Build and Package'){
         echo "Building the code"
@@ -64,7 +64,7 @@ finally {
     if (currentBuild.result=="FAILURE") {
         echo "Code build number ${BUILD_NUMBER} has failed."
     }
-    (currentBuild.result!= "ABORTED") && node("master"){
+    else (currentBuild.result!= "ABORTED"){
         echo "Code build number ${BUILD_NUMBER} has completed successfully."
     }  
 }
