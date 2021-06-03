@@ -24,10 +24,7 @@ node{
             echo "Number of try: ${i}"
             try{
             timeout(time: 10, unit: 'SECONDS') {
-              def qg = waitForQualityGate
-              if (qg.status != 'OK') {
-                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
-              }
+              def qg = waitForQualityGate()
             }
             }catch(Exception e){
                 if (i == 199){
