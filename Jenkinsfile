@@ -64,7 +64,7 @@ finally {
     if (currentBuild.result=="FAILURE") {
         echo "Code build number ${BUILD_NUMBER} has failed."
     }
-    else (currentBuild.result!= "ABORTED"){
+    else if (currentBuild.result!= "ABORTED"){
         echo "Code build number ${BUILD_NUMBER} has completed successfully."
     }  
 }
