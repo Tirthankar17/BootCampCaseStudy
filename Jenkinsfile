@@ -61,7 +61,7 @@ catch(Exception err){
     mail body: "Build has failed with ${err}", subject: 'Build Report', to: 'guptatirthankar@gmail.com'
 }
 finally {
-    (currentBuild.result=="FAILURE") {
+    if (currentBuild.result=="FAILURE") {
         echo "Code build number ${BUILD_NUMBER} has failed."
     }
     (currentBuild.result!= "ABORTED") && node("master"){
