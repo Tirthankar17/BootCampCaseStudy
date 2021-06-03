@@ -52,6 +52,8 @@ node{
     stage('Deploying app to slave node via Ansible'){
         ansiblePlaybook become: true, credentialsId: 'ansiblejenkins', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'deployapp.yml'
         echo "App deployed successfully on hosts"
+        //sending mail after successful deployment
+        mail body: "Code build ${BUILD_NUMBER} has completed successfully and deployed to host.", subject: "Build Report ${BUILD_NUMBER}" , to: 'guptatirthankar@gmail.com'
     }
     stage('Clean up'){
             echo "Cleaning up the Workspace"
@@ -67,9 +69,8 @@ catch(Exception err){
     mail body: "Build has failed with ${err}", subject: 'Build Report', to: 'guptatirthankar@gmail.com'
 }
 finally {
-    (currentBuild.result!= "ABORTED") && node("master") {
-        mail body: "Code build ${BUILD_NUMBER} has completed successfully and deployed to host.", subject: "Build Report ${BUILD_NUMBER}" , to: 'guptatirthankar@gmail.com'
-        echo "Code build number ${BUILD_NUMBER} has completed successfully. Sending email. "
+    (currentBuild.result!= "ABORTED") && node("master") && (currentBuild.result!= "FAILURE"){
+        echo "Code build number ${BUILD_NUMBER} has completed successfully."
     }
     
 }
