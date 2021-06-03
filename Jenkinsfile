@@ -15,9 +15,15 @@ node{
         git "${gitURL}"
     }
     stage('Sonar Check'){
-        //withSonarQubeEnv('sonarqubeserver'){
-            //sh "${mavenCMD} sonar:sonar"
-        //}
+        withSonarQubeEnv('sonarqubeserver'){
+            sh "${mavenCMD} sonar:sonar"
+        }
+    }
+    stage('Wait for quality gate'){
+        timeout(time: 1, unit: 'HOURS'){
+            def qgatefeedback= waitforQualityGate()
+            echo "${qgatefeedback.status}"
+        }
     }
     stage('AppScan Test'){
         //appscan application: '2f0476f4-f66c-464f-be87-25759eb32216', credentials: 'AppScanCred', name: 'AppScanTest', scanner: static_analyzer(hasOptions: false, target: "${WORKSPACE}"), type: 'Static Analyzer'
@@ -46,21 +52,21 @@ node{
     }
     stage('Clean up'){
             echo "Cleaning up the Workspace"
-            cleanWs()
+            //cleanWs()
     }
             
 
 }
 }
 catch(Exception err){
-    echo "Exception occured..."
+    echo "Exception occured in built, sending error notification..."
     currentBuild.result="FAILURE"
-    mail body: 'Build has failed', subject: 'Build Report', to: 'guptatirthankar@gmail.com'
+    mail body: "Build has failed with ${err}", subject: 'Build Report', to: 'guptatirthankar@gmail.com'
 }
 finally {
     (currentBuild.result!= "ABORTED") && node("master") {
-        echo "finally gets executed and end an email notification for every build"
-        mail body: 'Code build has completed successfully and deployed to hosts', subject: 'Build Report', to: 'guptatirthankar@gmail.com'
+        mail body: "Code build ${BUILD_NUMBER} has completed successfully and deployed to host.", subject: "Build Report ${BUILD_NUMBER}" , to: 'guptatirthankar@gmail.com'
+        echo "Code build number ${BUILD_NUMBER} has completed successfully. Sending email. "
     }
     
 }
