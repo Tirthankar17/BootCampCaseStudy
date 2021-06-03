@@ -16,7 +16,7 @@ node{
     }
     stage('Sonar Check'){
         withSonarQubeEnv('sonarqubeserver'){
-            sh "${mavenCMD} sonar:sonar"
+            sh "${mavenCMD} clean package sonar:sonar"
         }
     }
     stage('Wait for quality gate'){
