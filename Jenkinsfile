@@ -21,7 +21,7 @@ node{
     }
     stage('Wait for quality gate'){
         def maxretry=200
-        forloop (int i=0; i<maxRetry; i++){
+        for (int i=0; i<maxRetry; i++){
             timeout(time: 10, unit: 'SECONDS'){
             def qgatefeedback= waitForQualityGate()
             echo "${qgatefeedback.status}"
