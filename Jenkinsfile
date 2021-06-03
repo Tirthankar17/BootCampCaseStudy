@@ -20,9 +20,12 @@ node{
         }
     }
     stage('Wait for quality gate'){
-        timeout(time: 1, unit: 'HOURS'){
+        def maxretry=200
+        forloop (i=0; i<maxRetry; i++){
+            timeout(time: 10, unit: 'SECONDS'){
             def qgatefeedback= waitForQualityGate()
             echo "${qgatefeedback.status}"
+        }
         }
     }
     stage('AppScan Test'){
