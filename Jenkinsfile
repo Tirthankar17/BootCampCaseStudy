@@ -21,7 +21,7 @@ node{
     }
     stage('Wait for quality gate'){
         timeout(time: 1, unit: 'HOURS'){
-            def qgatefeedback= waitforQualityGate()
+            def qgatefeedback= waitForQualityGate()
             echo "${qgatefeedback.status}"
         }
     }
