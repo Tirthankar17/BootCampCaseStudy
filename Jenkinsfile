@@ -20,11 +20,13 @@ node{
         }
     }
     stage('Wait for Sonar Check Quality Gate'){
+        def qgate
         for (int i=0; i < 200; i++){
             timeout(time: 10, unit: 'SECONDS') {
-                waitForQualityGate()
+                qgate=waitForQualityGate()
             }
         }
+        echo "${qgate}"
     }
     stage('AppScan Test'){
         //appscan application: '2f0476f4-f66c-464f-be87-25759eb32216', credentials: 'AppScanCred', name: 'AppScanTest', scanner: static_analyzer(hasOptions: false, target: "${WORKSPACE}"), type: 'Static Analyzer'
