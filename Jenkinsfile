@@ -20,8 +20,7 @@ node{
         }
     }
     stage('Wait for quality gate'){
-        def maxretry=200
-        for (int i=0; i<maxRetry; i++){
+        for (int i=0; i < 200; i++){
             echo "Hey"
         }
     }
